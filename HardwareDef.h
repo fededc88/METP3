@@ -28,15 +28,22 @@
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef PWM_H
-#define	PWM_H
-
+#ifndef HARDWAREDEF_H
+#define	HARDWAREDEF_H
+ 
 #include <xc.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-void PWM1_Init(int);
+#define Fosc    32000000l 
+#define Fcy     16000000l
+#define Tosc    31250       //31250E-12
+#define Tcy     62500       //62500E-12
 
-#endif	/* PWM_H */
 
+//Simplify IRQ definition
+#define _IRQ __attribute__((interrupt, no_auto_psv))
+
+
+#define DELAY_105uS asm volatile ("REPEAT, #3816"); Nop(); // 105uS delay
+
+#endif	/* XC_HEADER_TEMPLATE_H */
 

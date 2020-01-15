@@ -16,11 +16,11 @@
 #include <stdio.h>
 #include "../stdbool.h"
 
-#include "xc.h"
+#include "HardwareDef.h"
+
 #include "Configuration.h"
 #include "UART.h"
 #include "Switches.h"
-
 
 
 
@@ -42,10 +42,16 @@ extern SWnState Sw1, Sw2, Sw3, Sw4;
 
 int main(void) {
     
+    // PIC24FJ64GA002 Configuration Bit Settings
     Configuration_Bit_Settings();
+    
+    // PIC24FJ64GA002 Clock Setting Init
     Clock_Init();
+    
     UART1_Init(9600);
     Timer1_Init(1000);
+    Timer2_Init(1000);
+    
     Pin_Init();
     Interrupts();
     
@@ -149,11 +155,15 @@ IFS0bits.T1IF = 0; //Reset Timer1 interrupt flag and Return from ISR
     void _IRQ _OC1Interrupt(void ){
  /* Interrupt Service Routine code goes here */       
         
- 
         
 IFS0bits.OC1IF = 0; //clear OC1 IRQ Flag
     
     }
-    
+  
+ //   Timer2 ISR:
+    void _IRQ _T2Interrupt(void)
+{
+IFS0bits.T2IF = 0; //clear T2 IRQ Flag
+}
     
     

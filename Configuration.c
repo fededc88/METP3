@@ -7,7 +7,7 @@
 
 
 #include "Configuration.h"
-
+#include "HardwareDef.h"
 
 
 
@@ -44,15 +44,12 @@ void Configuration_Bit_Settings(void) {
 
 void Clock_Init(void){
 
-    
-
 //Set new oscillator selection
 
     CLKDIVbits.RCDIV = 0b000;
     
     DELAY_105uS;
     
-
             asm volatile( 
          
                 "MOV #OSCCONH, w1\n"
@@ -72,15 +69,13 @@ void Clock_Init(void){
                 "MOV.b w3, [w1]\n"
 
                 "MOV.b w0, [w1]\n"
-                                  ); Nop();
+                                  );
+            Nop();
             
     DELAY_105uS;
-
-            
+    
 while(OSCCONbits.OSWEN != 0){}
 while(OSCCONbits.COSC != 0b001){}
- 
-
  
 }
 
@@ -93,7 +88,7 @@ void Interrupts(void){
     
 }
 
-void Timer1_Init(int Timer1_f){
+void Timer1_Init(long f_Hz){
     
     //Timer1_f Timer 1 frecuency on Hz 
 //    
@@ -101,31 +96,61 @@ void Timer1_Init(int Timer1_f){
 //    T1CONbits.TCKPS = 0; // 1:1 Clock prescaler
     
 //    
-    if((Fcy/Timer1_f)<=65536){
-        PR1 = (int) (Fcy/Timer1_f);
+    if((Fcy/f_Hz)<=65536){
+        PR1 = (int) (Fcy/f_Hz);
         T1CONbits.TCKPS = 0; // 1:1 Clock prescaler
     }
-    else if (Fcy/Timer1_f/8 <= 65536 ){
-        PR1 = (int) ((Fcy/8)/Timer1_f);
+    else if (Fcy/f_Hz/8 <= 65536 ){
+        PR1 = (int) ((Fcy/8)/f_Hz);
         T1CONbits.TCKPS = 1; // 1:8 Clock prescaler
     }
-    else if (Fcy/Timer1_f/64 <= 65536 ){
-        PR1 = (int) ((Fcy/64)/Timer1_f);
+    else if (Fcy/f_Hz/64 <= 65536 ){
+        PR1 = (int) ((Fcy/64)/f_Hz);
         T1CONbits.TCKPS = 2; // 1:64 Clock prescaler
     }
-    else if (Fcy/Timer1_f/256 <= 65536 ) {
-        PR1 = (int) ((Fcy/256)/Timer1_f);
+    else if (Fcy/f_Hz/256 <= 65536 ) {
+        PR1 = (int) ((Fcy/256)/f_Hz);
         T1CONbits.TCKPS = 3; // 1:64 Clock prescaler
     }
     
-    
-    T1CONbits.TON = 1; //Enable Timer 1 
-    
-    
+    T1CONbits.TON = 1; //Enable Timer 1
     
     IFS0bits.T1IF = 0; // Clear Interrupts T1 flag 
     IEC0bits.T1IE = 1; //Timer1 Interrupt Enable
       
+     
+}
+
+void Timer2_Init(long f_Hz){
+    
+    //Timer1_f Timer 1 frecuency on Hz 
+//    
+//    PR1 = 0x3E80;
+//    T1CONbits.TCKPS = 0; // 1:1 Clock prescaler
+    
+//    
+    if((Fcy/f_Hz)<=65536){
+        PR2 = (int) (Fcy/f_Hz);
+        T2CONbits.TCKPS = 0; // 1:1 Clock prescaler
+    }
+    else if (Fcy/f_Hz/8 <= 65536 ){
+        PR2 = (int) ((Fcy/8)/f_Hz);
+        T2CONbits.TCKPS = 1; // 1:8 Clock prescaler
+    }
+    else if (Fcy/f_Hz/64 <= 65536 ){
+        PR2 = (int) ((Fcy/64)/f_Hz);
+        T2CONbits.TCKPS = 2; // 1:64 Clock prescaler
+    }
+    else if (Fcy/f_Hz/256 <= 65536 ) {
+        PR2 = (int) ((Fcy/256)/f_Hz);
+        T1CONbits.TCKPS = 3; // 1:64 Clock prescaler
+    }
+        
+    IPC1bits.T2IP = 1; // Setup Output Compare 1 interrupt for
+    IFS0bits.T2IF = 0; // Clear Output Compare 1 interrupt flag
+    IEC0bits.T2IE = 1; // Enable Output Compare 1 interrupts
+    
+    T2CONbits.TON = 1; //Enable Timer 2
      
 }
 
