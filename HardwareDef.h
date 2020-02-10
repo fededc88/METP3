@@ -45,5 +45,9 @@
 
 #define DELAY_105uS asm volatile ("REPEAT, #3816"); Nop(); // 105uS delay
 
+//Defines for Sw state representation
+//#define PRESSED  0
+//#define RELEASED 1
+
 #endif	/* XC_HEADER_TEMPLATE_H */
 

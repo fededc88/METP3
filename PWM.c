@@ -1,9 +1,9 @@
 
-
+#include <xc.h>
 #include "PWM.h"
 #include "HardwareDef.h"
 
-void PWM_Init (int F_pwm1){ 
+void PWM1_Init(int F_pwm1){ 
     
 /*---------------- OC - PWM - Remapeo de Pines ------------------------------*/
     
@@ -23,8 +23,8 @@ void PWM_Init (int F_pwm1){
 
     OC1CON = 0x0000; // Turn off Output Compare 1 Module
     
-    OC1R = 0x1F40; // Initialize Compare Register1 50%
-    OC1RS = 0x1F40; // Initialize Secondary Compare Register1 50%
+    OC1R = 0x0080; // Initialize Compare Register1 50%
+    OC1RS = 0x0080; // Initialize Secondary Compare Register1 50%
     
     //Timer2 in initialized and enabled on Timer2_Init()
    // PR2 = 0x3E80; // Initialize PR2 with 16000 counts = 1Khz
@@ -35,6 +35,5 @@ void PWM_Init (int F_pwm1){
     
     //START!! OC1
     OC1CON = 0x0006; // Load new compare mode to OC1CON
-
 
 }

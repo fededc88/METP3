@@ -57,8 +57,7 @@ TRISBbits.TRISB13 = 1;
     
     
 //Set Baud Rate
-    
-   // BRG = (int) ((Fcy/4/BaudRate)-1); //U1BRG = 416
+
     U1BRG = (int) ((Fcy/16/BaudRate)-1); //U1BRG = 416
     
     

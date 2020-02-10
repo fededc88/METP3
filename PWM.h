@@ -22,7 +22,7 @@
 /* 
  * File:   
  * Author: 
- * Comments:
+*  VNM Comments:
  * Revision history: 
  */
 
@@ -31,12 +31,7 @@
 #ifndef PWM_H
 #define	PWM_H
 
-#include <xc.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 void PWM1_Init(int);
 
 #endif	/* PWM_H */
-
 
