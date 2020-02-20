@@ -146,11 +146,12 @@ void Timer2_Init(long f_Hz){
         T1CONbits.TCKPS = 3; // 1:64 Clock prescaler
     }
         
+    T2CONbits.TON = 1; //Enable Timer 2
+    
     IPC1bits.T2IP = 1; // Setup Output Compare 1 interrupt for
     IFS0bits.T2IF = 0; // Clear Output Compare 1 interrupt flag
     IEC0bits.T2IE = 1; // Enable Output Compare 1 interrupts
     
-    T2CONbits.TON = 1; //Enable Timer 2
-     
+    return;
 }
 

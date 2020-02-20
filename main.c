@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../stdbool.h"
+#include "dsp.h"
 
 #include "HardwareDef.h"
 
@@ -27,7 +28,8 @@
 
 extern SWnState Sw1, Sw2, Sw3, Sw4;
 int AN0value, AN1value;
-
+char buff[60];
+ 
 // <editor-fold defaultstate="collapsed" desc="Definición de variables Globales">//
 
 //
@@ -35,7 +37,12 @@ int AN0value, AN1value;
 
 int ReceivedChar = 0;
 //
-//int debug = 1; // To see serial print 
+//int debug = 1; // To see serial print
+
+extern float Seno[LEN_SIN];
+
+extern float sin_paso;
+
 
 // </editor-fold>
 
@@ -53,13 +60,16 @@ int main(void) {
 
     Sw_Pin_Init();
     Sw_Init();
-    Interrupts();
+  
+    //  Interrupts();
 
     // Timer2 function as Time Base for PWM
-    Timer2_Init(62500);
+    Timer2_Init(f_PWM);
     PWM1_Init(0);
 
     AD_Init();
+    
+    Senoide_Init(Seno_f_Ini);
 
     // sprintf(buff,"Hola Mundo \r\n");
     SendStringPolling("Started! \r\n");
@@ -111,16 +121,21 @@ void _IRQ _T1Interrupt(void) {
 //   Timer2 ISR:
 
 void _IRQ _T2Interrupt(void) {
+/* Interrupt Service Routine code goes here */
+    static float a = 0;
+
+    OC1RS = (int) Seno[(int)a];
+    
+//   printf(buff,"\r\n");
+//   SendStringPolling(buff);
+    
+     a = a + sin_paso;
+    
+    if (a > LEN_SIN) 
+        a = a - LEN_SIN;
+    
     IFS0bits.T2IF = 0; //clear T2 IRQ Flag
     return;
-}
-
-void _IRQ _OC1Interrupt(void) {
-    /* Interrupt Service Routine code goes here */
-
-
-    IFS0bits.OC1IF = 0; //clear OC1 IRQ Flag
-
 }
 
 void _IRQ _ADC1Interrupt(void) {

@@ -8,9 +8,21 @@
 #include <xc.h>
 #include "UART.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+#include "HardwareDef.h"
 
 
-
+/******************************************************************************
+ * Function: UART1_Init(int BaudRate);
+ * 
+ * Input: Int Baudrate -> Define BaudRate, 0 to 9600 as default
+ * Output: none
+ * 
+ * Description: Init UART 1 module.  9600 8n1 
+ *              Assign U1RX To Pin RP13
+ *              Assign U1TX To Pin RP14
+ ******************************************************************************/
 
 void UART1_Init(int BaudRate){
     
@@ -57,10 +69,11 @@ TRISBbits.TRISB13 = 1;
     
     
 //Set Baud Rate
-
-    U1BRG = (int) ((Fcy/16/BaudRate)-1); //U1BRG = 416
-    
-    
+    if(!BaudRate)
+        U1BRG = (int) ((Fcy/16/9600)-1); //U1BRG = 416
+    else
+        U1BRG = (int) ((Fcy/16/BaudRate)-1); //U1BRG = 416
+        
   U1MODEbits.UARTEN = 1; //enable module UART1
   U1STAbits.UTXEN = 1; //Enable Transmit
   
@@ -79,7 +92,16 @@ TRISBbits.TRISB13 = 1;
  }
 
 
-
+/******************************************************************************
+ * Function: SendStringPolling(char* str);
+ * 
+ * Input: char* str -> Pointer to String to be send
+ * Output: none
+ * 
+ * Description: Send string Throug UART1 until find NUL character
+ * 
+ * ATTENTION!! Function blocks program! 
+ ******************************************************************************/
 
 void SendStringPolling(char* str) {
     
@@ -89,5 +111,27 @@ void SendStringPolling(char* str) {
           str++;
         }
     }
+  return;
+}
+
+/******************************************************************************
+ * Function: SendStringPolling(char* str);
+ * 
+ * Input: int Entero -> Integer Value
+ * Output: none
+ * 
+ * Description: Send Integer Throug UART1
+ * 
+ * ATTENTION!! Function blocks program! 
+ ******************************************************************************/
+
+void SendIntPolling(int Entero){
+    
+    char buff[6];
+    
+    sprintf(buff, "%d", Entero );
+    SendStringPolling(buff);
+    
+    return;
 }
 

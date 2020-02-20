@@ -31,13 +31,9 @@
 #ifndef UART_H
 #define	UART_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include "HardwareDef.h"
-
 void UART1_Init(int BaudRate);
-
 void SendStringPolling(char *str);
+void SendIntPolling(int Entero);
 
 #endif	/* UART_H */
 
