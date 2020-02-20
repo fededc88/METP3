@@ -24,30 +24,21 @@
 #include "UART.h"
 #include "Switches.h"
 #include "PWM.h"
+#include "PWM_Extern.h"
 #include "ADC.h"
 
 extern SWnState Sw1, Sw2, Sw3, Sw4;
-int AN0value, AN1value;
+extern int AN0value, AN1value;
+#ifdef DEBUG2
+extern int ANOvalues[LEN_SIN];
+#endif
+
 char buff[60];
- 
-// <editor-fold defaultstate="collapsed" desc="Definición de variables Globales">//
-
-//
-//char buff[60] = {0};
-
 int ReceivedChar = 0;
-//
-//int debug = 1; // To see serial print
-
-extern float Seno[LEN_SIN];
-
-extern float sin_paso;
-
-
-// </editor-fold>
 
 int main(void) {
 
+    int i;
 
     // PIC24FJ64GA002 Configuration Bit Settings
     Configuration_Bit_Settings();
@@ -60,7 +51,7 @@ int main(void) {
 
     Sw_Pin_Init();
     Sw_Init();
-  
+
     //  Interrupts();
 
     // Timer2 function as Time Base for PWM
@@ -68,17 +59,48 @@ int main(void) {
     PWM1_Init(0);
 
     AD_Init();
-    
-    Senoide_Init(Seno_f_Ini);
 
-    // sprintf(buff,"Hola Mundo \r\n");
+    sin_Init(Seno_f_Ini);
+
+#ifdef DEBUG0
     SendStringPolling("Started! \r\n");
+#endif
 
     while (1) {
 
         Sw_app();
 
+#ifdef DEBUG1
+        if (f_debug_sin == TRUE) {
+            if (_Sw1 == PRESSED) {
+                SendStringPolling("START step_array[j]\r\n");
+                for (i = 0; i < LEN_SIN; i++) {
+                    SendFloatPolling(step_array[i]);
+                    SendStringPolling("\r\n");
+                }
+                SendStringPolling("END step_array[j++]\r\n");
+                f_debug_sin = FALSE;
 
+                SendStringPolling("\n\rSTART OC1R_array[j]\r\n");
+                for (i = 0; i < LEN_SIN; i++) {
+                    SendIntPolling(OC1R_array[i]);
+                    SendStringPolling("\r\n");
+                }
+                SendStringPolling("END OC1R_array[j++]\r\n");
+                f_debug_sin = FALSE;
+            }
+        }
+#endif
+
+#ifdef DEBUG2
+        if (_Sw2 == PRESSED) {
+            SendStringPolling("START ANOvalues[i]\r\n");
+            for (i = 0; i < LEN_SIN; i++) {
+                SendIntPolling(ANOvalues[i]);
+                SendStringPolling("\r\n");
+            }
+        }
+#endif
     }
     return 0;
 }
@@ -121,27 +143,50 @@ void _IRQ _T1Interrupt(void) {
 //   Timer2 ISR:
 
 void _IRQ _T2Interrupt(void) {
-/* Interrupt Service Routine code goes here */
+    /* Interrupt Service Routine code goes here */
     static float a = 0;
+    static int j;
+    
+    //Load PWM buffer with duty cicle
+    OC1RS = (int) Sin[(int) a];
 
-    OC1RS = (int) Seno[(int)a];
-    
-//   printf(buff,"\r\n");
-//   SendStringPolling(buff);
-    
-     a = a + sin_paso;
-    
-    if (a > LEN_SIN) 
+    //Make a step on Sin array
+    a = a + sin_step;
+    if (a > LEN_SIN)
         a = a - LEN_SIN;
+
+#ifdef DEBUG1
+    if (!f_debug_sin) {
+        if (j < LEN_SIN)
+            OC1R_array[j] = OC1R;
+        step_array[j++] = a;
+
+        if (!(j < LEN_SIN)) {
+            f_debug_sin = TRUE;
+            j = 0;
+        }
+    }
+#endif
     
     IFS0bits.T2IF = 0; //clear T2 IRQ Flag
     return;
 }
 
 void _IRQ _ADC1Interrupt(void) {
-    // Clear A/D conversion interrupt.   
+    static int i;
+    
     AN0value = ADC1BUF0;
     AN1value = ADC1BUF1;
+    
+#ifdef DEBUG2   
+    ANOvalues[i++] = ADC1BUF0;
+    
+    if (i>=LEN_SIN){
+        i=0;
+    }
+#endif
+    
+    // Clear A/D conversion interrupt Flag.   
     IFS0bits.AD1IF = 0;
     return;
 }

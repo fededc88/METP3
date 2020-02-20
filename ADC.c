@@ -1,6 +1,14 @@
 
 #include <p24FJ64GA002.h>
+#include "HardwareDef.h"
+#include "PWM.h"
 #include "ADC.h"
+
+int AN0value, AN1value;
+
+#ifdef DEBUG2
+int ANOvalues[LEN_SIN];
+#endif
 
 void AD_Init(void){
     
@@ -31,6 +39,8 @@ void AD_Init(void){
     AD1CHSbits.CH0NA = 0; //Channel 0 negative input is VRbit 
     AD1CSSL = 0x0003; // AN0 & AN1 are selected for sequential scanning on MUX A
     
+    //Scan Input Selections for CH0+ S/H Input for MUX A Input Multiplexer Setting bit
+    AD1CON2bits.CSCNA = 1; 
     //Select the desired sample/conversion sequence
     
     //Select how conversion results are presented in the buffer

@@ -1,8 +1,7 @@
 
 #include <xc.h>
-#include "PWM.h"
 #include "HardwareDef.h"
-
+#include "PWM.h"
 #include <stdio.h>
 #include <dsp.h>
 #include <math.h>
@@ -10,11 +9,26 @@
 
 
 //PWM Variables definitions 
-float Seno[256]; //SIN Buffer
-float sin_paso;
-extern float b[LEN_SIN * 10];
+float Sin[LEN_SIN]; //SIN Buffer
+float sin_step;
+#ifdef DEBUG1
+float step_array[LEN_SIN];
+int   OC1R_array[LEN_SIN];
+char f_debug_sin; //Flag inidicates buffer is ready. For debuging level 1
+#endif
+
+
 extern char buff[60];
 
+/******************************************************************************
+ * Function: PWM1_Init(int F_pwm1)
+ * 
+ * Input: int F_pwm1 -> unimplemented
+ * Output: none
+ * 
+ * Description: Initialize Output Compare Module as PWM
+
+ ******************************************************************************/
 void PWM1_Init(int F_pwm1){ 
     
 /*---------------- OC - PWM - Remapeo de Pines ------------------------------*/
@@ -50,7 +64,7 @@ void PWM1_Init(int F_pwm1){
 }
 
 /******************************************************************************
- * Function: Senoide_Init(float frecuencia);
+ * Function: sin_Init(float frecuencia);
  * 
  * Input: float frecuencia -> initial Sin Output Frecuency (in Hz)
  * Output: none
@@ -58,23 +72,35 @@ void PWM1_Init(int F_pwm1){
  * Description: Initialize Sin Array 
 
  ******************************************************************************/
-void Senoide_Init(float f_sin_init) {
+void sin_Init(float f_sin_init) {
     int i;
     
-    sin_paso = Set_Paso(f_sin_init);
+    sin_step = set_sin_step(f_sin_init);
     
-    for (i = 0; i < 256; i++) {
-        Seno[i] =( (1 + cosf(2 * PI / LEN_SIN * i)) * (vm_PWM/2) ); //Senoide de paso 0.5 grados
-
-        SendIntPolling((int)Seno[i]);
-        sprintf(buff,"\r\n");
-        SendStringPolling(buff);
-    };
-
+    for (i = 0; i < LEN_SIN; i++)
+        Sin[i] =( (1 + cosf(2 * PI / LEN_SIN * i)) * (vm_PWM/2) ); //Senoide de paso 0.5 grados
+        
+#ifdef DEBUG1
+    SendStringPolling("\r\nSTART Sin[i]:\r\n");
+    for (i = 0; i < LEN_SIN; i++){
+        SendFloatPolling(Sin[i]);
+        SendStringPolling("\r\n");
+    }
+    SendStringPolling("END Sin[i]\r\n");
+#endif
     return;
 }
 
-float Set_Paso(float f_sin){
+/******************************************************************************
+ * Function: sin_set_step(float f_sin)f
+ * 
+ * Input: float f_sin -> Sin Output Frecuency (in Hz)
+ * Output: none
+ * 
+ * Description: Set PWM1 Sin Output Frecuency (in Hz)
+
+ ******************************************************************************/
+float set_sin_step(float f_sin){
     
     float paso; 
     

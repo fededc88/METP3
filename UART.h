@@ -34,6 +34,7 @@
 void UART1_Init(int BaudRate);
 void SendStringPolling(char *str);
 void SendIntPolling(int Entero);
+void SendFloatPolling(float Flotante);
 
 #endif	/* UART_H */
 

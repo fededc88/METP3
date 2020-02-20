@@ -33,11 +33,21 @@
  
 #include <xc.h>
 
+// OSC defines - DO NOT EDIT!
 #define Fosc    32000000l 
 #define Fcy     16000000l
 #define Tosc    31250       //31250E-12
 #define Tcy     62500       //62500E-12
 
+//DEBUG
+//Uncomment to enable debugs levels 
+#define DEBUG0  0 
+#define DEBUG1  1   //Debug level used for PWM and SIN construction 
+#define DEBUG2  2   //Debug level used for ADC 
+
+//Logic Definitions
+#define TRUE    1
+#define FALSE   0
 
 //Simplify IRQ definition
 #define _IRQ __attribute__((interrupt, no_auto_psv))

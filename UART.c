@@ -10,6 +10,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
+
 #include "HardwareDef.h"
 
 
@@ -130,6 +132,28 @@ void SendIntPolling(int Entero){
     char buff[6];
     
     sprintf(buff, "%d", Entero );
+    SendStringPolling(buff);
+    
+    return;
+}
+
+/******************************************************************************
+ * Function: SendFloatPolling(float Flotante);
+ * 
+ * Input: float Flotante -> Floating Point Value
+ *        int   ndec     -> Number of decimal values
+ * Output: none
+ * 
+ * Description: Send Floating point value Throug UART1 as sring
+ * 
+ * ATTENTION!! Function blocks program! 
+ ******************************************************************************/
+
+void SendFloatPolling(float Flotante){
+    
+    char buff[20];
+    
+    sprintf(buff, "%.2f", (double) Flotante );
     SendStringPolling(buff);
     
     return;

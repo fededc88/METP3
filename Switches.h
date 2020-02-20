@@ -15,6 +15,10 @@
 #define DebounceTicks 20  // 1 Tick = 1 mS
 #define DebounceTicksHold 1500 // 2,5 S
  
+#define _Sw1 Sw1.LastState 
+#define _Sw2 Sw2.LastState 
+#define _Sw3 Sw3.LastState 
+#define _Sw4 Sw4.LastState
 
 typedef enum{
     IDLE = 0,
