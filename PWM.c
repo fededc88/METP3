@@ -76,9 +76,13 @@ void sin_Init(float f_sin_init) {
     int i;
     
     sin_step = set_sin_step(f_sin_init);
-    
-    for (i = 0; i < LEN_SIN; i++)
-        Sin[i] =( (1 + cosf(2 * PI / LEN_SIN * i)) * (vm_PWM/2) ); //Senoide de paso 0.5 grados
+
+    for (i = 0; i < LEN_SIN; i++) {
+        Sin[i] = ((1 + cosf(2 * PI / LEN_SIN * i)) * (vm_PWM / 2)); //Senoide de paso 0.5 grados
+        if (Sin[i] < 1)
+            Sin[i] = 1;
+    }
+        
         
 #ifdef DEBUG1
     SendStringPolling("\r\nSTART Sin[i]:\r\n");
