@@ -11,6 +11,7 @@
  *  
  * Created on 29 de julio de 2018, 16:33
  */
+#include "ConfigurationsBits.h"   // PIC24FJ64GA002 Configuration Bit Settings
 
 #include <xc.h>
 #include <stdlib.h>
@@ -39,9 +40,6 @@ int ReceivedChar = 0;
 int main(void) {
 
     int i;
-
-    // PIC24FJ64GA002 Configuration Bit Settings
-    Configuration_Bit_Settings();
 
     // PIC24FJ64GA002 Clock Setting Init
     Clock_Init();

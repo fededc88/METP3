@@ -19,12 +19,13 @@ void AD_Init(void){
     AD1CON2bits.VCFG = 0b000; // Vr+ = AVDD Vr- = AVSS
     
     //Select the analog conversion clock to match desired data rate with processor clock
-    //24 Tad/conv = 12 Sampling Tad + 12 conv Tad.
-    // 100 Tcy/2 *24 = 66 kHz muestreo 
-    //OJO estamos justo en la frecuencia de aliasing de muestreo, tenes presente
+    //19,5 Tad/conv = 4 Sampling Tad + 12 conv Tad.
+    // 4 * Tcy/2 *19.5 = 1/205,128kHz kHz muestreo
+    //Al ser 2 entradas AN0 y AN1 -> 2015,128/2 = 102,5 KHz / entrada
+    //OJO estamos cerca de la frecuencia de aliasing (60kHz) de muestreo, tener presente.
     AD1CON3bits.ADRC = 0; //Clock derived from system clock
-    AD1CON3bits.SAMC = 0b01100; //12 TAD Auto-Sample Time bits
-    AD1CON3bits.ADCS = 0b1100110; // 100 Tcy/2 - A/D Conversion Clock Select bits
+    AD1CON3bits.SAMC = 0x07; //7 * Tad Auto-Sample Time bits ~ 1uS
+    AD1CON3bits.ADCS = 0x04; // Tad = 4 * Tcy/2 ~ 250 nS - A/D Conversion Clock Select bits
     
     //AN0 set as analog input
     AD1PCFGbits.PCFG0 = 0; //Pin for corresponding analog channel is in Analog mode; port read input disabled, A/D module

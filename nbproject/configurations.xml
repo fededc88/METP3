@@ -11,6 +11,7 @@
       <itemPath>HardwareDef.h</itemPath>
       <itemPath>ADC.h</itemPath>
       <itemPath>PWM_Extern.h</itemPath>
+      <itemPath>ConfigurationsBits.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

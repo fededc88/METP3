@@ -39,7 +39,6 @@
 
 #include "HardwareDef.h"
 
-void Configuration_Bit_Settings(void);
 void Clock_Init(void);
 void Interrupts(void);
 void Timer1_Init(long);
