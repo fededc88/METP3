@@ -27,11 +27,12 @@
 #include "PWM.h"
 #include "PWM_Extern.h"
 #include "ADC.h"
+#include "application.h"
 
 extern SWnState Sw1, Sw2, Sw3, Sw4;
-extern int AN0value, AN1value;
+
 #ifdef DEBUG2
-extern int ANOvalues[LEN_SIN];
+    extern volatile int ANOvalues[LEN_SIN];
 #endif
 
 char buff[60];
@@ -59,6 +60,8 @@ int main(void) {
     AD_Init();
 
     sin_Init(Seno_f_Ini);
+    
+    Cuadrator_Pin_Init();
 
 #ifdef DEBUG0
     SendStringPolling("Started! \r\n");
@@ -66,6 +69,8 @@ int main(void) {
 
     while (1) {
 
+        
+        app_proces();
         Sw_app();
 
 #ifdef DEBUG1
@@ -172,7 +177,9 @@ void _IRQ _T2Interrupt(void) {
 
 void _IRQ _ADC1Interrupt(void) {
     static int i;
-    
+    extern volatile int AN0value, AN1value;
+
+    //Recupero los valores del buffer del periférico.
     AN0value = ADC1BUF0;
     AN1value = ADC1BUF1;
     

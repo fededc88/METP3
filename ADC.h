@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+#define getADCcounts() 1024
+    
 void AD_Init(void);
 
 

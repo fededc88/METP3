@@ -34,7 +34,7 @@ extern "C" {
 #pragma config ICS = PGx1               // Comm Channel Select (Emulator EMUC1/EMUD1 pins are shared with PGC1/PGD1)
 #pragma config GWRP = OFF               // General Code Segment Write Protect (Writes to program memory are allowed)
 #pragma config GCP = OFF                // General Code Segment Code Protect (Code protection is disabled)
-#pragma config JTAGEN = ON              // JTAG Port Enable (JTAG port is enabled)
+#pragma config JTAGEN = OFF              // JTAG Port Disabled (JTAG port is enabled)
 
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.

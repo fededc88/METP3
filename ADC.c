@@ -57,6 +57,10 @@ void AD_Init(void){
     // required. Default priority level is 4.
     IEC0bits.AD1IE = 1; // Enable A/D conversion interrupt
     
+    //    In order to use pins multiplexed with the A/D for digital I/O, the corresponding bits in
+//the AD1PCFG register must be set to ë1í, even if the A/D module is turned off.
+    AD1PCFG = 0x9FFC;
+    
     // Turn on A/D
     AD1CON1bits.ADON = 1; 
    
