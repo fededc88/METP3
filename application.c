@@ -6,10 +6,10 @@ short int dco_ste_0, dco_ste_1;
 extern int AN0value, AN1value;
 
 void app_proces(void){
-    
+        
     //Cuadro la senoide y escribo el registro correspondiente al pin de salida
-    LATBbits.LATB9 = cuadrador(&AN0value, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
-    LATBbits.LATB6 = cuadrador(&AN1value, HISTERESIS, dco_ste_1);  // AN1 -> pin15 RB6
+    _LATB9 = cuadrador(&AN0value, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
+//    _LATB6 = cuadrador(&AN1value, HISTERESIS, dco_ste_1);  // AN1 -> pin15 RB6
     
  return;   
 }
@@ -30,7 +30,7 @@ int cuadrador(int *pVal, int histeresis, int DC_STATE ) {
             break;
 
         case DOWN:
-            if( ANx_value > (SIN_CERO + histeresis + 2))
+            if( ANx_value > (SIN_CERO + histeresis))
                 DC_STATE = UP;
             
             break;

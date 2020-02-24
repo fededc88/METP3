@@ -43,6 +43,7 @@ void Clock_Init(void);
 void Interrupts(void);
 void Timer1_Init(long);
 void Timer2_Init(long);
+void Timer3_Init(long);
 
 
 /*Function Sw1 to Sw4 return switches state*/

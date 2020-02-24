@@ -32,12 +32,13 @@ void UART1_Init(int BaudRate){
     
 __builtin_write_OSCCONL(OSCCON & 0xBF); // Unlock Registers
 
-    // Configure Input Functions (Table 10-2))
+    // Set pin RB13 as input 
+    TRISBbits.TRISB13 = 0;
     
+    // Configure Input Functions (Table 10-2))
     RPINR18bits.U1RXR = 13; // Assign U1RX To Pin RP13
     
     // Configure Output Functions (Table 10-3)
-
     RPOR7bits.RP14R = 3 ; // Assign U1TX To Pin RP14
 
 __builtin_write_OSCCONL(OSCCON | 0x40);     // Lock Registers
@@ -55,10 +56,10 @@ TRISBbits.TRISB13 = 1;
 
     
     //Set UART TX Interrupt Priority
-        IPC3bits.U1TXIP &= 0b101;
+        IPC3bits.U1TXIP &= 0b001;
        
     //Set UART RX Interrupt Priority    
-        IPC2bits.U1RXIP &= 0b101; 
+        IPC2bits.U1RXIP &= 0b001; 
     
         
 /*---------------------- Setting up the UART1---------------------------------*/
@@ -79,10 +80,11 @@ TRISBbits.TRISB13 = 1;
   U1MODEbits.UARTEN = 1; //enable module UART1
   U1STAbits.UTXEN = 1; //Enable Transmit
   
- 
+  IPC3bits.U1TXIP = 1;
   IFS0bits.U1TXIF = 0; //Clean UART1RX interrupt Flag
   IEC0bits.U1TXIE = 1; //Enable Transmit Interrupt  
   
+  IPC3bits.U1TXIP = 1;
   IFS0bits.U1RXIF = 0; //Clean UART1RX interrupt Flag
   IEC0bits.U1RXIE = 1; //Enable Receive Interrupt
   

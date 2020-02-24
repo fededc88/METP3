@@ -12,8 +12,9 @@
 extern "C" {
 #endif
 
-extern float Sin[LEN_SIN];
-extern float sin_step;
+extern int Sin[LEN_SIN];
+extern int sin_step;
+extern int step_delta;
 
 #ifdef DEBUG1
 extern float step_array[LEN_SIN];

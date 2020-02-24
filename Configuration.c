@@ -111,15 +111,49 @@ void Timer2_Init(long f_Hz){
     }
     else if (Fcy/f_Hz/256 <= 65536 ) {
         PR2 = (int) ((Fcy/256)/f_Hz);
-        T1CONbits.TCKPS = 3; // 1:64 Clock prescaler
+        T2CONbits.TCKPS = 3; // 1:64 Clock prescaler
     }
         
     T2CONbits.TON = 1; //Enable Timer 2
     
-    IPC1bits.T2IP = 1; // Setup Output Compare 1 interrupt for
+    IPC1bits.T2IP = 7; // Setup Output Compare 1 interrupt for
     IFS0bits.T2IF = 0; // Clear Output Compare 1 interrupt flag
     IEC0bits.T2IE = 1; // Enable Output Compare 1 interrupts
     
     return;
 }
 
+
+void Timer3_Init(long f_Hz){
+    
+    //Timer1_f Timer 1 frecuency on Hz 
+//    
+//    PR1 = 0x3E80;
+//    T1CONbits.TCKPS = 0; // 1:1 Clock prescaler
+    
+//    
+    if((Fcy/f_Hz)<=65536){
+        PR3 = (int) (Fcy/f_Hz);
+        T3CONbits.TCKPS = 0; // 1:1 Clock prescaler
+    }
+    else if (Fcy/f_Hz/8 <= 65536 ){
+        PR3 = (int) ((Fcy/8)/f_Hz);
+        T3CONbits.TCKPS = 1; // 1:8 Clock prescaler
+    }
+    else if (Fcy/f_Hz/64 <= 65536 ){
+        PR3 = (int) ((Fcy/64)/f_Hz);
+        T3CONbits.TCKPS = 2; // 1:64 Clock prescaler
+    }
+    else if (Fcy/f_Hz/256 <= 65536 ) {
+        PR3 = (int) ((Fcy/256)/f_Hz);
+        T3CONbits.TCKPS = 3; // 1:64 Clock prescaler
+    }
+        
+    T3CONbits.TON = 1; //Enable Timer 2
+    
+    IPC2bits.T3IP = 6; // Setup Output Compare 1 interrupt for
+    IFS0bits.T3IF = 0; // Clear Output Compare 1 interrupt flag
+    IEC0bits.T3IE = 1; // Enable Output Compare 1 interrupts
+    
+    return;
+}

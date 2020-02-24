@@ -19,7 +19,7 @@ extern "C" {
 //Valor medio, en muestras, del buffer del ADC    
 #define SIN_CERO    515 //En muestras
     
-#define HISTERESIS  1   //En muestras
+#define HISTERESIS  -2   //En muestras
 
     
 void app_proces(void);

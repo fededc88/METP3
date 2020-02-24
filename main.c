@@ -37,6 +37,7 @@ extern SWnState Sw1, Sw2, Sw3, Sw4;
 
 char buff[60];
 int ReceivedChar = 0;
+int contador; 
 
 int main(void) {
 
@@ -46,7 +47,7 @@ int main(void) {
     Clock_Init();
 
     UART1_Init(9600);
-    Timer1_Init(1000);
+    Timer1_Init(500);
 
     Sw_Pin_Init();
     Sw_Init();
@@ -62,6 +63,9 @@ int main(void) {
     sin_Init(Seno_f_Ini);
     
     Cuadrator_Pin_Init();
+    
+    // Timer3 function as Time Base for Fr
+    Timer3_Init(100000);
 
 #ifdef DEBUG0
     SendStringPolling("Started! \r\n");
@@ -147,16 +151,25 @@ void _IRQ _T1Interrupt(void) {
 
 void _IRQ _T2Interrupt(void) {
     /* Interrupt Service Routine code goes here */
-    static float a = 0;
+    static int i = 0, error;
+#ifdef DEBUG1
     static int j;
-    
+#endif
+ //   _LATB9 ^= 1;
+
     //Load PWM buffer with duty cicle
-    OC1RS = (int) Sin[(int) a];
+    OC1RS = Sin[i];
 
     //Make a step on Sin array
-    a = a + sin_step;
-    if (a > LEN_SIN)
-        a = a - LEN_SIN;
+    i += sin_step;
+    ////    should add one count every steps_delta steps
+    if (++error == step_delta) {
+        i++;
+        error = 0;
+    }
+    //circular buffer control
+    if (i >= LEN_SIN)
+        i -= LEN_SIN;
 
 #ifdef DEBUG1
     if (!f_debug_sin) {
@@ -170,27 +183,37 @@ void _IRQ _T2Interrupt(void) {
         }
     }
 #endif
-    
+
     IFS0bits.T2IF = 0; //clear T2 IRQ Flag
     return;
 }
 
+void _IRQ _T3Interrupt(void) {
+    _LATB6 ^=1;
+    
+    if (_RB6 && _RB9)
+        contador++;
+    
+    IFS0bits.T3IF = 0; //clear T3 IRQ Flag
+}
+
 void _IRQ _ADC1Interrupt(void) {
+#ifdef DEBUG2   
     static int i;
+#endif
     extern volatile int AN0value, AN1value;
 
+ //   _LATB6 ^= 1;
     //Recupero los valores del buffer del periférico.
     AN0value = ADC1BUF0;
     AN1value = ADC1BUF1;
     
 #ifdef DEBUG2   
     ANOvalues[i++] = ADC1BUF0;
-    
     if (i>=LEN_SIN){
         i=0;
     }
 #endif
-    
     // Clear A/D conversion interrupt Flag.   
     IFS0bits.AD1IF = 0;
     return;

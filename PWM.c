@@ -9,8 +9,10 @@
 
 
 //PWM Variables definitions 
-float Sin[LEN_SIN]; //SIN Buffer
-float sin_step;
+int Sin[LEN_SIN]; //SIN Buffer
+int sin_step;
+int step_delta;
+
 #ifdef DEBUG1
 float step_array[LEN_SIN];
 int   OC1R_array[LEN_SIN];
@@ -75,10 +77,17 @@ void PWM1_Init(int F_pwm1){
 void sin_Init(float f_sin_init) {
     int i;
     
-    sin_step = set_sin_step(f_sin_init);
+    sin_step = set_sin_step(&step_delta, f_sin_init);
+
+#ifdef DEBUG1
+    SendStringPolling("\r\nsin_step: ");
+    SendIntPolling(sin_step);
+    SendStringPolling("\r\nstep_delta: ");
+    SendIntPolling(step_delta);
+#endif
 
     for (i = 0; i < LEN_SIN; i++) {
-        Sin[i] = ((1 + cosf(2 * PI / LEN_SIN * i)) * (vm_PWM / 2)); //Senoide de paso 0.5 grados
+        Sin[i] = (int) ((1 + cosf(2 * PI / LEN_SIN * i)) * (vm_PWM / 2)); //Senoide de paso 0.5 grados
         if (Sin[i] < 1)
             Sin[i] = 1;
     }
@@ -104,11 +113,21 @@ void sin_Init(float f_sin_init) {
  * Description: Set PWM1 Sin Output Frecuency (in Hz)
 
  ******************************************************************************/
-float set_sin_step(float f_sin){
+int set_sin_step(int *delta,float f_sin){
     
-    float paso; 
+    float paso, decimalPart;
+    int integerPart;
+    int *pdelta;
     
+    pdelta = delta;
+    
+
     paso = LEN_SIN / ( f_PWM / f_sin );
     
-    return paso;
+    integerPart = (int) paso;
+    decimalPart =  paso - integerPart;
+    
+    *pdelta = (int) (1 / decimalPart);
+    
+    return integerPart;
 }
