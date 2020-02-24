@@ -31,7 +31,7 @@
 #ifndef PWM_H
 #define	PWM_H
 
-#define LEN_SIN 2048 // Sin Array number of elements
+#define LEN_SIN 512 // Sin Array number of elements
 
 #define f_PWM 62500 //Frecuencia de Operación del PWM para lograr 8 bits de Resolucion
 #define vm_PWM 256 //Valor máximo del Ciclo de trabajo del PWM en Cuentas - La resolucion es de 8 bits

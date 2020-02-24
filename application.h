@@ -20,11 +20,21 @@ extern "C" {
 #define SIN_CERO    515 //En muestras
     
 #define HISTERESIS  -2   //En muestras
-
+#define HIST_AN0
+#define HIST_AN1
+    
+//Estados del Contador
+    
+#define IDLE     0
+#define ATRASO   1
+#define ADELANTO 2 
+#define LATCH    3
+#define RESET    4    
     
 void app_proces(void);
 int cuadrador(int *pVal, int histeresis, int DCO_STATE );
 void Cuadrator_Pin_Init(void);
+void contador(void);
 
 #ifdef	__cplusplus
 }

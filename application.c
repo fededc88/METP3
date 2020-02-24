@@ -9,11 +9,45 @@ void app_proces(void){
         
     //Cuadro la senoide y escribo el registro correspondiente al pin de salida
     _LATB9 = cuadrador(&AN0value, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
-//    _LATB6 = cuadrador(&AN1value, HISTERESIS, dco_ste_1);  // AN1 -> pin15 RB6
+    _LATB6 = cuadrador(&AN1value, HISTERESIS-3, dco_ste_1);  // AN1 -> pin15 RB6
     
  return;   
 }
 
+void contador(void){
+    
+   static char STATE_CONT;
+   
+   switch(STATE_CONT){
+       
+       //Idle Case, waiting for counter to start
+       case IDLE:
+           break;
+       
+       //contando AN1 atrasa AN0   
+       case ATRASO:
+           break;
+       
+       //contando AN1 Adelanta AN0
+       case ADELANTO:
+           break; 
+           
+       //Latch value to display!     
+       case LATCH:
+           //Sin break
+       case RESET:
+           break;
+           
+           
+           
+           
+   }
+   
+   
+    
+    
+    
+}
 
 
 int cuadrador(int *pVal, int histeresis, int DC_STATE ) {

@@ -51,12 +51,12 @@ void AD_Init(void){
     AD1CON2bits.SMPI = 0x1;
     
     //Configure A/D interrupt (if required):
-    IFS0bits.AD1IF = 1; // Clear A/D conversion interrupt.
+    IFS0bits.AD1IF = 0; // Clear A/D conversion interrupt.
     
     // Configure A/D interrupt priority bits (AD1IP<2:0>) here, if
     // required. Default priority level is 4.
     
-    IEC0bits.AD1IE = 0; // Enable A/D conversion interrupt
+    IEC0bits.AD1IE = 1; // Enable A/D conversion interrupt
     
     //    In order to use pins multiplexed with the A/D for digital I/O, the corresponding bits in
 //the AD1PCFG register must be set to ë1í, even if the A/D module is turned off.

@@ -37,7 +37,6 @@ extern SWnState Sw1, Sw2, Sw3, Sw4;
 
 char buff[60];
 int ReceivedChar = 0;
-int contador; 
 
 int main(void) {
 
@@ -175,7 +174,7 @@ void _IRQ _T2Interrupt(void) {
     if (!f_debug_sin) {
         if (j < LEN_SIN)
             OC1R_array[j] = OC1R;
-        step_array[j++] = a;
+        step_array[j++] = i;
 
         if (!(j < LEN_SIN)) {
             f_debug_sin = TRUE;
@@ -189,10 +188,8 @@ void _IRQ _T2Interrupt(void) {
 }
 
 void _IRQ _T3Interrupt(void) {
-    _LATB6 ^=1;
+  //  _LATB6 ^=1;
     
-    if (_RB6 && _RB9)
-        contador++;
     
     IFS0bits.T3IF = 0; //clear T3 IRQ Flag
 }
