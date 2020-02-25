@@ -31,15 +31,19 @@
 #ifndef PWM_H
 #define	PWM_H
 
-#define LEN_SIN 512 // Sin Array number of elements
+#define LEN_SIN 2048 // Sin Array number of elements
+#define LEN_SIN_FP 204800 //Sin Array number of elemets * 100
+
 
 #define f_PWM 62500 //Frecuencia de Operación del PWM para lograr 8 bits de Resolucion
 #define vm_PWM 256 //Valor máximo del Ciclo de trabajo del PWM en Cuentas - La resolucion es de 8 bits
-#define Seno_f_Ini 5000.00f //Frecuencia Inicial de la Senoide de Salida
+#define Seno_f_Ini 1000.00f //Frecuencia Inicial de la Senoide de Salida
+
+#define PARTE_DECIMAL 100 
 
 void PWM1_Init(int);
 void sin_Init(float);
-int set_sin_step(int *delta,float f_sin);
+long set_sin_step(float f_sin);
 
 #endif	/* PWM_H */
 

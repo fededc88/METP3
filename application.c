@@ -9,7 +9,7 @@ void app_proces(void){
         
     //Cuadro la senoide y escribo el registro correspondiente al pin de salida
     _LATB9 = cuadrador(&AN0value, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
-    _LATB6 = cuadrador(&AN1value, HISTERESIS-3, dco_ste_1);  // AN1 -> pin15 RB6
+    _LATB6 = cuadrador(&AN1value, HISTERESIS, dco_ste_1);  // AN1 -> pin15 RB6
     
  return;   
 }
@@ -22,14 +22,30 @@ void contador(void){
        
        //Idle Case, waiting for counter to start
        case IDLE:
+           if(_RB9 == 1 && _RB6 == 0){
+               STATE_CONT = ATRASO;
+    //           ++contador_atraso;
+               break;
+           }
+           if(_RB9 == 0 && _RB6 == 1){
+               STATE_CONT = ADELANTO;
+      //         ++contador_adelanto;
+               break;
+           }
+           
            break;
        
        //contando AN1 atrasa AN0   
        case ATRASO:
+        //   ++contador_atraso;
+           
+                   
            break;
        
        //contando AN1 Adelanta AN0
        case ADELANTO:
+       //    ++contador_adelanto;
+           
            break; 
            
        //Latch value to display!     
@@ -38,15 +54,10 @@ void contador(void){
        case RESET:
            break;
            
-           
-           
-           
    }
-   
-   
-    
-    
-    
+      
+   return;
+     
 }
 
 

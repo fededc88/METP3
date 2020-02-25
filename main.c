@@ -146,29 +146,29 @@ void _IRQ _T1Interrupt(void) {
     return;
 }
 
-//   Timer2 ISR:
-
+//   Timer2 ISR - PWM Handler Interrupt:
 void _IRQ _T2Interrupt(void) {
     /* Interrupt Service Routine code goes here */
-    static int i = 0, error;
+    static long i = 0;
+    static int indice = 0;
 #ifdef DEBUG1
     static int j;
 #endif
- //   _LATB9 ^= 1;
+    //    Toogle pin 18 to mesure interrupt time    
+    //    _LATB9 ^= 1;
 
     //Load PWM buffer with duty cicle
-    OC1RS = Sin[i];
+    OC1RS = Sin[indice];
 
     //Make a step on Sin array
     i += sin_step;
-    ////    should add one count every steps_delta steps
-    if (++error == step_delta) {
-        i++;
-        error = 0;
-    }
+
     //circular buffer control
-    if (i >= LEN_SIN)
-        i -= LEN_SIN;
+    if (i >= LEN_SIN_FP)
+        i -= LEN_SIN_FP;
+    
+    // Divido por 100 para obtener la parte entera del indice i
+    indice = __builtin_divsd(i, PARTE_DECIMAL);
 
 #ifdef DEBUG1
     if (!f_debug_sin) {
@@ -194,6 +194,7 @@ void _IRQ _T3Interrupt(void) {
     IFS0bits.T3IF = 0; //clear T3 IRQ Flag
 }
 
+//   ADC1 ISR:
 void _IRQ _ADC1Interrupt(void) {
 #ifdef DEBUG2   
     static int i;

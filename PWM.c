@@ -10,8 +10,7 @@
 
 //PWM Variables definitions 
 int Sin[LEN_SIN]; //SIN Buffer
-int sin_step;
-int step_delta;
+long sin_step;
 
 #ifdef DEBUG1
 float step_array[LEN_SIN];
@@ -77,7 +76,7 @@ void PWM1_Init(int F_pwm1){
 void sin_Init(float f_sin_init) {
     int i;
     
-    sin_step = set_sin_step(&step_delta, f_sin_init);
+    sin_step = set_sin_step( f_sin_init);
 
 #ifdef DEBUG1
     SendStringPolling("\r\nsin_step: ");
@@ -108,26 +107,20 @@ void sin_Init(float f_sin_init) {
  * Function: sin_set_step(float f_sin)f
  * 
  * Input: float f_sin -> Sin Output Frecuency (in Hz)
- * Output: none
+ * Output: long paso_fp -> step 
  * 
- * Description: Set PWM1 Sin Output Frecuency (in Hz)
-
+ * Description: return step un fixed point format. 
+ *              for example, 4,14 is returned as 414
  ******************************************************************************/
-int set_sin_step(int *delta,float f_sin){
+long set_sin_step(float f_sin){
     
-    float paso, decimalPart;
-    int integerPart;
-    int *pdelta;
-    
-    pdelta = delta;
-    
+    float paso;
+    long paso_fp;  
 
     paso = LEN_SIN / ( f_PWM / f_sin );
     
-    integerPart = (int) paso;
-    decimalPart =  paso - integerPart;
+    paso = paso * 100;
+    paso_fp = (long) paso;
     
-    *pdelta = (int) (1 / decimalPart);
-    
-    return integerPart;
+    return paso_fp;
 }
