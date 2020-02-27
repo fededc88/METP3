@@ -11,6 +11,7 @@
 //PWM Variables definitions 
 int Sin[LEN_SIN]; //SIN Buffer
 long sin_step;
+float sin_freq;
 
 #ifdef DEBUG1
 float step_array[LEN_SIN];

@@ -11,6 +11,11 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+    
+#define FR_FREQ     100000L  // fr frequency in Hertz
+#define N_PERIODOS  1000     // Número de PERIODOS del contador de periodos múltiple
+                             // TODO: debería ser variable
+#define SIN_FREQ    1000.00f // Frecuencia Inicial de la Senoide de Salida
 
 //Cuadrator State machine states.
 #define DOWN 1
@@ -36,7 +41,7 @@ void app_proces(void);
 int cuadrador(volatile uint16_t *pVal, int histeresis, int DC_STATE );
 void Cuadrator_Pin_Init(void);
 void contador(int eNe_veces);
-long calcular_angulo(long N_cuentas);
+long calcular_angulo(long Nx, int N_muestras, float sin_freq, long fr_freq );
 
 extern char buff[60];
 #ifdef	__cplusplus

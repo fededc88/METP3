@@ -29,6 +29,8 @@
 #include "ADC.h"
 #include "application.h"
 
+void Peripherals_Init(void);
+
 extern SWnState Sw1, Sw2, Sw3, Sw4;
 extern short int f_contar;
 
@@ -42,43 +44,20 @@ char buff[60];
 int ReceivedChar = 0;
 
 int main(void) {
-
+    
+#ifdef DEBUG1 || DEBUG2
     int i;
-
-    // PIC24FJ64GA002 Clock Setting Init
-    Clock_Init();
-
-    UART1_Init(9600);
-    Timer1_Init(100);
-
-    Sw_Pin_Init();
-    Sw_Init();
-
-    //  Interrupts();
-
-    // Timer2 function as Time Base for PWM
-    Timer2_Init(f_PWM);
-    PWM1_Init(0);
-
-    AD_Init();
-
-    sin_Init(Seno_f_Ini);
-    
-    Cuadrator_Pin_Init();
-    
-    // Timer3 function as Time Base for Fr
-    Timer3_Init(100000);
-
-#ifdef DEBUG0
-    SendStringPolling("Started! \r\n");
 #endif
+    //Inicialización módulos y periféricos
+    Peripherals_Init();
 
     while (1) {
 
-     //   app_proces();
-        contador(1000);
-//        Sw_app();
+        //   app_proces();
+        contador(N_PERIODOS);
+        Sw_app();
 
+        // <editor-fold defaultstate="collapsed" desc="DEBUG code">
 #ifdef DEBUG1
         if (f_debug_sin == TRUE) {
             if (_Sw1 == PRESSED) {
@@ -110,16 +89,57 @@ int main(void) {
             }
         }
 #endif
+
+        //asd// </editor-fold>
+
     }
     return 0;
 }
 
+ //Inicialización módulos y periféricos
+void Peripherals_Init(void) {
+
+    // PIC24FJ64GA002 Clock Setting Init
+    Clock_Init();
+
+    UART1_Init(9600);
+    Timer1_Init(100);
+
+    Sw_Pin_Init();
+    Sw_Init();
+
+    //  Interrupts();
+
+    // Timer2 function as Time Base for PWM
+    Timer2_Init(f_PWM);
+    PWM1_Init(0);
+    
+    //ADC1 Init
+    AD_Init();
+
+    //Sin wave Output Init and imput
+    sin_Init(SIN_FREQ);
+    Cuadrator_Pin_Init();
+
+    // Timer3 function as Time Base for Fr
+    Timer3_Init(FR_FREQ);
+    sin_freq = FR_FREQ;
+
+#ifdef DEBUG0
+    SendStringPolling("\r\nStarted! \r\n");
+#endif
+
+    return;
+}
+
+//   UART1TX ISR - Disabled:
 void _IRQ _U1TXInterrupt(void) {
     IFS0bits.U1TXIF = 0; //Clean UART1RX interrupt Flag
     return;
 
 }
 
+//   UART1RX ISR - Disabled:
 void _IRQ _U1RXInterrupt(void) {
 
     /*Si o si, dentro de el handler de la interrupción hay que leer el Buffer de recepción 
@@ -135,6 +155,7 @@ void _IRQ _U1RXInterrupt(void) {
 
 }
 
+//   Timer1 ISR - SW Handler Interrupt:
 void _IRQ _T1Interrupt(void) {
 
     /* Interrupt Service Routine code goes here */
@@ -190,6 +211,7 @@ void _IRQ _T2Interrupt(void) {
     return;
 }
 
+//   Timer3 ISR - Fr:
 void _IRQ _T3Interrupt(void) {
     
   extern volatile long decada_contadora;
@@ -201,7 +223,7 @@ void _IRQ _T3Interrupt(void) {
  IFS0bits.T3IF = 0; //clear T3 IRQ Flag
 }
 
-//   ADC1 ISR:
+//   ADC1 ISR - Quadrator
 void _IRQ _ADC1Interrupt(void) {
 #ifdef DEBUG2   
     static int i;

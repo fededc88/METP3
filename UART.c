@@ -82,11 +82,11 @@ TRISBbits.TRISB13 = 1;
   
   IPC3bits.U1TXIP = 1;
   IFS0bits.U1TXIF = 0; //Clean UART1RX interrupt Flag
-  IEC0bits.U1TXIE = 1; //Enable Transmit Interrupt  
+  IEC0bits.U1TXIE = 0; //Enable Transmit Interrupt  
   
   IPC3bits.U1TXIP = 1;
   IFS0bits.U1RXIF = 0; //Clean UART1RX interrupt Flag
-  IEC0bits.U1RXIE = 1; //Enable Receive Interrupt
+  IEC0bits.U1RXIE = 0; //Enable Receive Interrupt
   
 
 

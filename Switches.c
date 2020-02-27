@@ -1,57 +1,73 @@
 
 #include "Switches.h"
+#include "PWM.h"
+#include "PWM_Extern.h"
 
 SWnState Sw1, Sw2, Sw3, Sw4;
 
 void Sw_app(void){
     
     char buff[60];
-
-    if (Sw1.StateChange == 1 && Sw1.LastState == PRESSED) {
-        Sw1.StateChange = 0;
-        sprintf(buff, "Sw1() PUSSHH!! \r\n");
-        SendStringPolling(buff);
-    }
-    if (Sw1.LastState == HOLD && Sw1.StateChange == 1) {
-        Sw1.StateChange = 0;
-        sprintf(buff, "Sw1() HOLD \r\n");
-        SendStringPolling(buff);
-    }
-
-    if (Sw2.StateChange == 1 && Sw2.LastState == PRESSED) {
-        Sw2.StateChange = 0;
-        sprintf(buff, "Sw2() PUSSHH!! \r\n");
-        SendStringPolling(buff);
-    }
-
-    if (Sw2.LastState == HOLD && Sw2.StateChange == 1) {
-        Sw2.StateChange = 0;
-        sprintf(buff, "Sw2() HOLD \r\n");
-        SendStringPolling(buff);
-    }
+//COMENTADO para optimizar el código!
+//    if (Sw1.StateChange == 1 && Sw1.LastState == PRESSED) {
+//        Sw1.StateChange = 0;
+//        sprintf(buff, "Sw1() PUSSHH!! \r\n");
+//        SendStringPolling(buff);
+//    }
+//    if (Sw1.LastState == HOLD && Sw1.StateChange == 1) {
+//        Sw1.StateChange = 0;
+//        sprintf(buff, "Sw1() HOLD \r\n");
+//        SendStringPolling(buff);
+//    }
+//
+//    if (Sw2.StateChange == 1 && Sw2.LastState == PRESSED) {
+//        Sw2.StateChange = 0;
+//        sprintf(buff, "Sw2() PUSSHH!! \r\n");
+//        SendStringPolling(buff);
+//    }
+//
+//    if (Sw2.LastState == HOLD && Sw2.StateChange == 1) {
+//        Sw2.StateChange = 0;
+//        sprintf(buff, "Sw2() HOLD \r\n");
+//        SendStringPolling(buff);
+//    }
 
     if (Sw3.StateChange == 1 && Sw3.LastState == PRESSED) {
         Sw3.StateChange = 0;
-        sprintf(buff, "Sw3() PUSSHH!! \r\n");
+        
+        sin_freq += 100;
+        sin_step = set_sin_step( sin_freq);
+        
+        sprintf(buff, "\n\rSin Freq: %d Hz\r\n", (int) sin_freq);
         SendStringPolling(buff);
+        
+//        sprintf(buff, "Sw3() PUSSHH!! \r\n");
+//        SendStringPolling(buff);
     }
-    if (Sw3.LastState == HOLD && Sw3.StateChange == 1) {
-        Sw3.StateChange = 0;
-        sprintf(buff, "Sw3() HOLD \r\n");
-        SendStringPolling(buff);
-    }
+//    if (Sw3.LastState == HOLD && Sw3.StateChange == 1) {
+//        Sw3.StateChange = 0;
+//        sprintf(buff, "Sw3() HOLD \r\n");
+//        SendStringPolling(buff);
+//    }
 
     if (Sw4.StateChange == 1 && Sw4.LastState == PRESSED) {
         Sw4.StateChange = 0;
-        sprintf(buff, "Sw4() PUSSHH!! \r\n");
+
+        sin_freq -= 100;
+        sin_step = set_sin_step( sin_freq);
+        
+        sprintf(buff, "\n\rSin Freq: %d Hz\r\n", (int) sin_freq);
         SendStringPolling(buff);
+        
+//        sprintf(buff, "Sw4() PUSSHH!! \r\n");
+//        SendStringPolling(buff);
     }
-    if (Sw4.LastState == HOLD && Sw4.StateChange == 1) {
-        Sw4.StateChange = 0;
-        sprintf(buff, "Sw4() HOLD \r\n");
-        SendStringPolling(buff);
-    }
-    
+//    if (Sw4.LastState == HOLD && Sw4.StateChange == 1) {
+//        Sw4.StateChange = 0;
+//        sprintf(buff, "Sw4() HOLD \r\n");
+//        SendStringPolling(buff);
+//    }
+//    
     
 }
 

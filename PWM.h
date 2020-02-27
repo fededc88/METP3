@@ -37,7 +37,7 @@
 
 #define f_PWM 62500 //Frecuencia de Operación del PWM para lograr 8 bits de Resolucion
 #define vm_PWM 256 //Valor máximo del Ciclo de trabajo del PWM en Cuentas - La resolucion es de 8 bits
-#define Seno_f_Ini 1000.00f //Frecuencia Inicial de la Senoide de Salida
+
 
 #define PARTE_DECIMAL 100 
 

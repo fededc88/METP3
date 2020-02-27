@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "application.h"
 #include "UART.h"
+#include "PWM.h"
+#include "PWM_Extern.h"
 
 short int dco_ste_0, dco_ste_1;
 short int f_signo;
@@ -10,6 +12,8 @@ extern int AN0value, AN1value;
 long display_cuentas;
 long decada_contadora;
 short int f_contar;
+
+
 void app_proces(void){
           
     _LATB9 = !cuadrador(&ADC1BUF0, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
@@ -67,11 +71,11 @@ void contador(int eNe_veces) {
             else
                 break;
             //Latch value to display!     
-        case LATCH:
+        case LATCH: //DISPLAY:
+                           // calcular_angulo(long Nx, int N_muestras, float sin_freq, long fr_freq )
+            display_cuentas = calcular_angulo(decada_contadora, N_PERIODOS, sin_freq, FR_FREQ );
             
-            display_cuentas = calcular_angulo(decada_contadora);
-            
-            sprintf(buff,"%ld °\r",display_cuentas);
+            sprintf(buff,"%ld.%02ld °\r",display_cuentas/100, display_cuentas % 100 );
             SendStringPolling(buff);
             
             //Sin break
@@ -87,16 +91,17 @@ void contador(int eNe_veces) {
 
 }
 
-long calcular_angulo(long N_cuentas){
+long calcular_angulo(long Nx, int N_muestras, float sin_freq, long fr_freq ){
     
     float N_cuentas_f;
     float angulo;
     
-    N_cuentas_f = (float) N_cuentas;
+    N_cuentas_f = (float) Nx;
     
-    angulo = N_cuentas_f * 360 * 100000 / 1000 / 1000;
+    angulo = (N_cuentas_f /fr_freq /N_muestras) * (360 * sin_freq );
     
-    return (long) angulo;
+    //Multiplico por 100 para poder recuperar la parte decimal
+    return (long) (angulo * 100);
 }
 
 int cuadrador(volatile uint16_t *pVal, int histeresis, int DC_STATE ) {
