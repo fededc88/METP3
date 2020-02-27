@@ -116,7 +116,7 @@ void Timer2_Init(long f_Hz){
         
     T2CONbits.TON = 1; //Enable Timer 2
     
-    IPC1bits.T2IP = 7; // Setup Output Compare 1 interrupt for
+    IPC1bits.T2IP = 6; // Setup Output Compare 1 interrupt for
     IFS0bits.T2IF = 0; // Clear Output Compare 1 interrupt flag
     IEC0bits.T2IE = 1; // Enable Output Compare 1 interrupts
     
@@ -151,9 +151,9 @@ void Timer3_Init(long f_Hz){
         
     T3CONbits.TON = 1; //Enable Timer 2
     
-    IPC2bits.T3IP = 6; // Setup Output Compare 1 interrupt for
-    IFS0bits.T3IF = 0; // Clear Output Compare 1 interrupt flag
-    IEC0bits.T3IE = 1; // Enable Output Compare 1 interrupts
+    IPC2bits.T3IP = 7; // Setup Timer3 interrupt for
+    IFS0bits.T3IF = 0; // Clear Timer3 interrupt flag
+    IEC0bits.T3IE = 1; // Disable Timer3 interrupts
     
     return;
 }

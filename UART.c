@@ -96,6 +96,8 @@ TRISBbits.TRISB13 = 1;
  }
 
 
+
+
 /******************************************************************************
  * Function: SendStringPolling(char* str);
  * 
@@ -119,12 +121,12 @@ void SendStringPolling(char* str) {
 }
 
 /******************************************************************************
- * Function: SendStringPolling(char* str);
+ * Function: SendIntPolling(char* str);
  * 
  * Input: int Entero -> Integer Value
  * Output: none
  * 
- * Description: Send Integer Throug UART1
+ * Description: Send Integer throug UART1
  * 
  * ATTENTION!! Function blocks program! 
  ******************************************************************************/

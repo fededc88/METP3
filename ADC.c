@@ -55,7 +55,7 @@ void AD_Init(void){
     
     // Configure A/D interrupt priority bits (AD1IP<2:0>) here, if
     // required. Default priority level is 4.
-    
+    IPC3bits.AD1IP = 6;
     IEC0bits.AD1IE = 1; // Enable A/D conversion interrupt
     
     //    In order to use pins multiplexed with the A/D for digital I/O, the corresponding bits in

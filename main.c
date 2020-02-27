@@ -30,6 +30,9 @@
 #include "application.h"
 
 extern SWnState Sw1, Sw2, Sw3, Sw4;
+extern short int f_contar;
+
+_Bool clk;
 
 #ifdef DEBUG2
     extern volatile int ANOvalues[LEN_SIN];
@@ -46,7 +49,7 @@ int main(void) {
     Clock_Init();
 
     UART1_Init(9600);
-    Timer1_Init(500);
+    Timer1_Init(100);
 
     Sw_Pin_Init();
     Sw_Init();
@@ -72,9 +75,9 @@ int main(void) {
 
     while (1) {
 
-        
-        app_proces();
-        Sw_app();
+     //   app_proces();
+        contador(1000);
+//        Sw_app();
 
 #ifdef DEBUG1
         if (f_debug_sin == TRUE) {
@@ -188,10 +191,14 @@ void _IRQ _T2Interrupt(void) {
 }
 
 void _IRQ _T3Interrupt(void) {
-  //  _LATB6 ^=1;
     
-    
-    IFS0bits.T3IF = 0; //clear T3 IRQ Flag
+  extern volatile long decada_contadora;
+  
+  //toogle signal
+  //  _LATB8 ^=1;
+    if(f_contar == 1)
+        decada_contadora++;  
+ IFS0bits.T3IF = 0; //clear T3 IRQ Flag
 }
 
 //   ADC1 ISR:
@@ -199,12 +206,16 @@ void _IRQ _ADC1Interrupt(void) {
 #ifdef DEBUG2   
     static int i;
 #endif
-    extern volatile int AN0value, AN1value;
-
+ //   extern volatile int AN0value, AN1value;
+ // Togle pin16 RB6 to time mesure    
  //   _LATB6 ^= 1;
+    
     //Recupero los valores del buffer del periférico.
-    AN0value = ADC1BUF0;
-    AN1value = ADC1BUF1;
+//    AN0value = ADC1BUF0;
+//    AN1value = ADC1BUF1;
+    
+    //Recupero los valores del buffer del periférico y los cuadro.
+    app_proces();
     
 #ifdef DEBUG2   
     ANOvalues[i++] = ADC1BUF0;

@@ -24,18 +24,21 @@ extern "C" {
 #define HIST_AN1
     
 //Estados del Contador
-    
-#define IDLE     0
-#define ATRASO   1
-#define ADELANTO 2 
-#define LATCH    3
-#define RESET    4    
+
+#define IDLE        0
+#define CONTANDO    1
+#define VECES       2 
+#define LATCH       3
+#define RESET       4    
+#define FF          5
     
 void app_proces(void);
-int cuadrador(int *pVal, int histeresis, int DCO_STATE );
+int cuadrador(volatile uint16_t *pVal, int histeresis, int DC_STATE );
 void Cuadrator_Pin_Init(void);
-void contador(void);
+void contador(int eNe_veces);
+long calcular_angulo(long N_cuentas);
 
+extern char buff[60];
 #ifdef	__cplusplus
 }
 #endif

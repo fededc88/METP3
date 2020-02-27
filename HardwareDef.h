@@ -41,7 +41,7 @@
 
 //DEBUG
 //Uncomment to enable debugs levels 
-//#define DEBUG0  0 
+#define DEBUG0  0 
 //#define DEBUG1  1   //Debug level used for PWM and SIN construction 
 //#define DEBUG2  2   //Debug level used for ADC 
 
