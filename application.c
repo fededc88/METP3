@@ -16,8 +16,8 @@ short int f_contar;
 
 void app_proces(void){
           
-    _LATB9 = !cuadrador(&ADC1BUF0, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
-    _LATB6 =  cuadrador(&ADC1BUF1, HISTERESIS, dco_ste_1);  // AN1 -> pin15 RB6
+    _LATB9 =  !cuadrador(&ADC1BUF0,SIN_CERO, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
+    _LATB6 =  cuadrador(&ADC1BUF1,512, HISTERESIS, dco_ste_1);  // AN1 -> pin15 RB6
     
  return;   
 }
@@ -26,7 +26,8 @@ void contador(int eNe_veces) {
 
     static char STATE_CONT;
     static int n;
-
+    int display_cuentas_ent, display_cuentas_dec;
+    
     switch (STATE_CONT) {
         case IDLE:
             if (_RB9 == !DOWN){
@@ -36,6 +37,7 @@ void contador(int eNe_veces) {
             //Idle Case, waiting for counter to start
         case FF:
             if (_RB9 == !UP) {
+                _LATB7 = UP;
                 STATE_CONT = CONTANDO;
                 f_contar = 1;
             }
@@ -52,6 +54,7 @@ void contador(int eNe_veces) {
         case CONTANDO:
             //decada_contadora++; //Contando en la interrupción del Timer3
             if ( _RB6 == !UP) {
+                _LATB7 = DOWN;
                 STATE_CONT = VECES;
                 f_contar = 0;
             } 
@@ -64,6 +67,7 @@ void contador(int eNe_veces) {
                 break;
 
         case VECES:
+            
             ++n;
             STATE_CONT = IDLE;
             if (n >= eNe_veces) 
@@ -75,7 +79,10 @@ void contador(int eNe_veces) {
                            // calcular_angulo(long Nx, int N_muestras, float sin_freq, long fr_freq )
             display_cuentas = calcular_angulo(decada_contadora, N_PERIODOS, sin_freq, FR_FREQ );
             
-            sprintf(buff,"%ld.%02ld °\r",display_cuentas/100, display_cuentas % 100 );
+            display_cuentas_ent = display_cuentas/100;
+            display_cuentas_dec = display_cuentas % 100;
+
+            sprintf(buff,"%d.%02d Deg\r", display_cuentas_ent, display_cuentas_dec);
             SendStringPolling(buff);
             
             //Sin break
@@ -100,11 +107,15 @@ long calcular_angulo(long Nx, int N_muestras, float sin_freq, long fr_freq ){
     
     angulo = (N_cuentas_f /fr_freq /N_muestras) * (360 * sin_freq );
     
+//    if(angulo > 180){
+//        angulo -= 180;
+//    }
+    
     //Multiplico por 100 para poder recuperar la parte decimal
     return (long) (angulo * 100);
 }
 
-int cuadrador(volatile uint16_t *pVal, int histeresis, int DC_STATE ) {
+int cuadrador(volatile uint16_t *pVal, int Cero, int histeresis, int DC_STATE ) {
 
     int ANx_value;
     
@@ -113,12 +124,12 @@ int cuadrador(volatile uint16_t *pVal, int histeresis, int DC_STATE ) {
     switch (DC_STATE) {
 
         case UP:
-            if( ANx_value < (SIN_CERO - histeresis) )
+            if( ANx_value < (Cero - histeresis) )
                 DC_STATE = DOWN;
             break;
 
         case DOWN:
-            if( ANx_value > (SIN_CERO + histeresis))
+            if( ANx_value > (Cero + histeresis))
                 DC_STATE = UP;
             
             break;

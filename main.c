@@ -55,7 +55,7 @@ int main(void) {
 
         //   app_proces();
         contador(N_PERIODOS);
-        Sw_app();
+//        Sw_app();
 
         // <editor-fold defaultstate="collapsed" desc="DEBUG code">
 #ifdef DEBUG1
@@ -123,7 +123,7 @@ void Peripherals_Init(void) {
 
     // Timer3 function as Time Base for Fr
     Timer3_Init(FR_FREQ);
-    sin_freq = FR_FREQ;
+    sin_freq = SIN_FREQ;
 
 #ifdef DEBUG0
     SendStringPolling("\r\nStarted! \r\n");

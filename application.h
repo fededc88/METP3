@@ -22,7 +22,7 @@ extern "C" {
 #define UP   0
     
 //Valor medio, en muestras, del buffer del ADC    
-#define SIN_CERO    515 //En muestras
+#define SIN_CERO    290 //En muestras
     
 #define HISTERESIS  -2   //En muestras
 #define HIST_AN0
@@ -38,7 +38,7 @@ extern "C" {
 #define FF          5
     
 void app_proces(void);
-int cuadrador(volatile uint16_t *pVal, int histeresis, int DC_STATE );
+int cuadrador(volatile uint16_t *pVal, int Cero, int histeresis, int DC_STATE );
 void Cuadrator_Pin_Init(void);
 void contador(int eNe_veces);
 long calcular_angulo(long Nx, int N_muestras, float sin_freq, long fr_freq );

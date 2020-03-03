@@ -8,6 +8,7 @@ SWnState Sw1, Sw2, Sw3, Sw4;
 void Sw_app(void){
     
     char buff[60];
+    int sin_freq_int;
 //COMENTADO para optimizar el código!
 //    if (Sw1.StateChange == 1 && Sw1.LastState == PRESSED) {
 //        Sw1.StateChange = 0;
@@ -35,13 +36,20 @@ void Sw_app(void){
     if (Sw3.StateChange == 1 && Sw3.LastState == PRESSED) {
         Sw3.StateChange = 0;
         
+        IEC0bits.AD1IE = 0; // Disable A/D conversion interrupt
+        IEC0bits.T2IE = 0; // Disable Timer 2 - Output Compare 1 interrupts
+            
         sin_freq += 100;
         sin_step = set_sin_step( sin_freq);
         
-        sprintf(buff, "\n\rSin Freq: %d Hz\r\n", (int) sin_freq);
+        sin_freq_int = (int) sin_freq;
+        sprintf(buff, "\n\rFreq: %d Hz\r\n", sin_freq_int);
         SendStringPolling(buff);
         
-//        sprintf(buff, "Sw3() PUSSHH!! \r\n");
+        IEC0bits.AD1IE = 1; // Enable A/D conversion interrupt
+        IEC0bits.T2IE = 1; // Enable Timer 2 - Output Compare 1 interrupts
+
+        //        sprintf(buff, "Sw3() PUSSHH!! \r\n");
 //        SendStringPolling(buff);
     }
 //    if (Sw3.LastState == HOLD && Sw3.StateChange == 1) {
@@ -53,12 +61,18 @@ void Sw_app(void){
     if (Sw4.StateChange == 1 && Sw4.LastState == PRESSED) {
         Sw4.StateChange = 0;
 
+        IEC0bits.AD1IE = 0; // Disable A/D conversion interrupt
+        IEC0bits.T2IE = 0; // Disable Timer 2 - Output Compare 1 interrupts
+        
         sin_freq -= 100;
         sin_step = set_sin_step( sin_freq);
         
-        sprintf(buff, "\n\rSin Freq: %d Hz\r\n", (int) sin_freq);
+        sin_freq_int = (int) sin_freq;
+        sprintf(buff, "\n\rSin Freq: %d Hz\r\n", sin_freq_int);
         SendStringPolling(buff);
         
+        IEC0bits.AD1IE = 1; // Enable A/D conversion interrupt
+        IEC0bits.T2IE = 1; // Enable Timer 2 - Output Compare 1 interrupts
 //        sprintf(buff, "Sw4() PUSSHH!! \r\n");
 //        SendStringPolling(buff);
     }
