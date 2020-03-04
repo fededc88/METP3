@@ -16,8 +16,8 @@ short int f_contar;
 
 void app_proces(void){
           
-    _LATB9 =  !cuadrador(&ADC1BUF0,SIN_CERO, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
-    _LATB6 =  cuadrador(&ADC1BUF1,512, HISTERESIS, dco_ste_1);  // AN1 -> pin15 RB6
+    _LATB9 =  cuadrador(&ADC1BUF1,SIN_CERO, HISTERESIS, dco_ste_0);  // AN0 -> pin18 RB9
+    _LATB6 =  !cuadrador(&ADC1BUF0,260, 0, dco_ste_1);  // AN1 -> pin15 RB6
     
  return;   
 }

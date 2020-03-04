@@ -22,7 +22,7 @@ extern "C" {
 #define UP   0
     
 //Valor medio, en muestras, del buffer del ADC    
-#define SIN_CERO    290 //En muestras
+#define SIN_CERO    512 //En muestras
     
 #define HISTERESIS  -2   //En muestras
 #define HIST_AN0
