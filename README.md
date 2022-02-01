@@ -1,4 +1,4 @@
-# Medididor de diferencia de fase de ondas senoidales
+# Medidor de diferencia de fase de ondas senoidales
 Trabajo Practico número 3, cátedra de Mediciones Electrónicas de la facultad de Ciencias Exactas, Ingeniería y Agrimensura de la Universidad Nacional de Rosario (UNR).
 
 ## Brief
